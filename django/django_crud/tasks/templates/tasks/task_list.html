@@ -1,0 +1,37 @@
+{% extends 'tasks/base.html' %}
+
+{% block title %}Task Manager{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-6 text-center">My Tasks</h1>
+
+<!-- Form to Add Task -->
+<form method="POST" class="flex gap-2 mb-6">
+    {% csrf_token %}
+    <input type="text" name="title" placeholder="Add a new task..." required
+           class="flex-1 border border-gray-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+    <button type="submit" 
+            class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg transition">
+        Add
+    </button>
+</form>
+
+<!-- Task List -->
+<ul class="divide-y divide-gray-200">
+    {% for task in tasks %}
+    <li class="py-3 flex justify-between items-center">
+        <span class="{% if task.completed %}line-through text-gray-400{% else %}text-gray-700{% endif %} font-medium">
+            {{ task.title }}
+        </span>
+        <div class="flex gap-3">
+            <a href="{% url 'task_update' task.id %}" 
+               class="text-amber-500 hover:text-amber-600 text-sm font-semibold">Edit</a>
+            <a href="{% url 'task_delete' task.id %}" 
+               class="text-red-500 hover:text-red-600 text-sm font-semibold">Delete</a>
+        </div>
+    </li>
+    {% empty %}
+    <p class="text-center text-gray-500 py-4">No tasks found. Add one above!</p>
+    {% endfor %}
+</ul>
+{% endblock %}
